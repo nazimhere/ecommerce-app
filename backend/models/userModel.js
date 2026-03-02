@@ -7,7 +7,7 @@ const userSchema=new mongoose.Schema({
        cartData:{type:mongoose.Schema.Types.Mixed,default:{}},  // ✅ CORRECT
 
         name:{type:String,required:true},
-         name:{type:String,required:true},
+     role: { type: String, default: "user", enum: ["user", "admin"] },
 
 }, {minimize:false}
 )

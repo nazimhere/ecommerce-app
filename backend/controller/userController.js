@@ -73,4 +73,29 @@ const adminLogin = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
-export { loginUser, registerUser, adminLogin };
+
+const createAdmin = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const exists = await userModel.findOne({ email });
+    if (exists) {
+      return res.json({ success: false, message: "Admin already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const admin = await userModel.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: "admin",
+    });
+
+    res.json({ success: true, message: "Admin created", id: admin._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { loginUser, registerUser, adminLogin,createAdmin };

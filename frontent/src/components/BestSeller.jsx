@@ -12,7 +12,7 @@ const BestSeller = () => {
     const bestProducts = products.filter((item) => item.bestseller); // ✅ CORRECT
     setBestSeller(bestProducts.slice(0, 5));
   }
-}, [])
+}, [products])
 
   // Keep empty - PERFECT for this case
  // Added products dependency

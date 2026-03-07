@@ -1,28 +1,31 @@
 import express from 'express'
 import { listproduct, addProduct, removeproduct, singleproduct } from '../controller/productController.js'
-import multer from 'multer';  // ✅ npm package, NOT local file
-import adminAuth from '../middleware/adminAuth.js';
+import multer from 'multer'
+import adminAuth from '../middleware/adminAuth.js'
 
-const productRouter = express.Router();
+const productRouter = express.Router()
 
-// Multer setup directly here
 const storage = multer.diskStorage({
     destination: 'uploads/',
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+        cb(null, Date.now() + '-' + file.originalname)
     }
-});
-const upload = multer({ storage });  // ✅ Local variable
+})
+const upload = multer({ storage })
 
-productRouter.post('/add',adminAuth, upload.fields([
+productRouter.post('/add', adminAuth, upload.fields([
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
     { name: 'image3', maxCount: 1 },
     { name: 'image4', maxCount: 1 }
-]), addProduct);
+]), addProduct)
 
-productRouter.post('/remove',adminAuth, removeproduct);
-productRouter.get('/list', listproduct);
-productRouter.get('/single/:id', singleproduct);
+productRouter.post('/remove', adminAuth, removeproduct)
+productRouter.get('/list', listproduct)
+productRouter.get('/single/:id', singleproduct)
 
-export default productRouter;
+// ❌ DELETE these two lines — they were the cause of the crash
+// router.post('/remove', adminAuth, removeproduct)
+// router.get('/list', listproduct)
+
+export default productRouter

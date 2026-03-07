@@ -8,6 +8,7 @@ import userModel from './models/usermodel.js'
 import userRouter from './routes/userRoute.js'
 import productRouter from './routes/productRoute.js'
 
+
 //app config
 const app = express()
 const port = process.env.PORT || 4000
@@ -23,6 +24,7 @@ app.use(cors())
 //api endpoints
 app.use('/api/user',userRouter);
 app.use('/api/product',productRouter)
+app.use('/uploads', express.static('uploads'))
 
 app.get('/', (req, res) => {
     res.send("api working")

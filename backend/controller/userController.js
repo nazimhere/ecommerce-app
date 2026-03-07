@@ -59,21 +59,21 @@ const registerUser = async (req, res) => {
 };
 // Route for admin login
 const adminLogin = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        // Find admin user (assumes role field exists)
-        const admin = await userModel.findOne({ email, role: 'admin' });
-        if (!admin || !(await bcrypt.compare(password, admin.password))) {
-            return res.json({ success: false, message: "Invalid admin credentials" });
-        }
-        const token = createToken(admin._id);
-        res.json({ success: true, token, role: admin.role });
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
-};
+  try {
+    const { email, password } = req.body;
 
+    // ✅ Check directly against env variables — no DB lookup needed
+    if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
+      return res.json({ success: false, message: "Invalid admin credentials" });
+    }
+
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
+    res.json({ success: true, token });
+
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
 const createAdmin = async (req, res) => {
   try {
     const { name, email, password } = req.body;

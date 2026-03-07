@@ -8,27 +8,20 @@ const Login = ({ setToken }) => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = async(e) => {
-    try{
-    e.preventDefault();
-    const response=await axios.post(backendUrl + '/api/user/admin',{email,password})
-   if(response.data.success){
-    setToken(response.data.token)
-   }
-   else{
-    toast.error(response.data.message)
-   }
-    }catch(e){
-   console.log(e);
-   toast.error(e.message)
-
-    }
-    // Test credentials (replace with real API later)
-    if (email === 'admin@test.com' && password === '123456') {
-      setToken('admin-jwt-token'); // Login success → Dashboard
+  e.preventDefault();  // 
+  try {
+    const response = await axios.post(backendUrl + '/api/user/admin', { email, password })
+    if (response.data.success) {
+      setToken(response.data.token)
+      toast.success('Login successful!')  // ✅ optional
     } else {
-      alert('Wrong credentials! Use: admin@test.com / 123456');
+      toast.error(response.data.message)
     }
-  };
+  } catch(e) {
+    console.log(e);
+    toast.error(e.message)
+  }
+};
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-50'>

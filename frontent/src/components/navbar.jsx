@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { assets } from '../assets/assets'
+import { assets,lo } from '../assets/assets'
 import { NavLink, Link } from 'react-router-dom'
+
 import { ShopContext } from '../context/shopcontext'
 
 const Navbar = () => {
@@ -16,7 +17,7 @@ const Navbar = () => {
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
-            <Link to='/'><img src={assets.logo} className='w-36' alt="Logo" /></Link>
+            <Link to='/'><img src={lo} className='w-80' alt="Logo" /></Link>
             <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
                 <NavLink to='/' className='flex flex-col items-center gap-1'>
                     <p>HOME</p>

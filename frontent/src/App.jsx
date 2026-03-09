@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/home'
 import Collection from './pages/collection'
+import Profile from './pages/Profile'
 import About from './pages/about'
 import Contact from './pages/contact'
 import Product from './pages/product'
@@ -12,6 +13,7 @@ import Orders from './pages/orders'
 import Navbar from './components/navbar'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
+import Verify from './pages/Verify'
  import { ToastContainer, toast } from 'react-toastify';
 
 const App = () => {
@@ -30,6 +32,8 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/placeorder' element={<PlaceOrder />} />
           <Route path='/orders' element={<Orders />} />
+          <Route path='/verify' element={<Verify />} />
+          <Route path='/profile' element={<Profile />} />
         
            
         </Routes>

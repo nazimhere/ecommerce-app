@@ -1,74 +1,113 @@
-import React, { useContext } from 'react'
-import { ShopContext } from '../context/shopcontext'
-import Title from '../components/title'
+import React, { useContext, useEffect, useState } from 'react'
+import { ShopContext } from '../context/ShopContext'        // ← capital S and C
+import Title from '../components/Title'                    // ← capital T
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Orders = () => {
-  const { products, currency } = useContext(ShopContext);
+    const { backendUrl, token, currency } = useContext(ShopContext)
+    const [orderData, setOrderData] = useState([])
 
-  return (
-    <div className='border-t pt-16'>
-      <div className='text-2xl mb-4'>
-        <Title text1={'My'} text2={'Orders'} />
-      </div>
-      <div>
-        {products.slice(1, 4).map((item, index) => {
-          const orderDate = new Date(Date.now() - (index + 1) * 3 * 24 * 60 * 60 * 1000).toLocaleDateString();
-          const orderSize = ['S', 'M', 'L', 'XL'][Math.floor(Math.random() * 4)];
-          const orderQuantity = Math.floor(Math.random() * 3) + 1;
-          
-          return (
-            <div key={item._id || index} className='py-6 border-b last:border-b-0 bg-white hover:bg-gray-50 p-4 rounded-lg'>
-              {/* Order Header */}
-              <div className='flex justify-between items-start mb-4'>
-                <div>
-                  <h3 className='font-bold text-lg'>{item.name}</h3>
-                  <p className='text-sm text-gray-500'>Order #{1001 + index} • {orderDate}</p>
-                </div>
-                <span className='bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium'>
-                  Ready To Ship
-                </span>
-              </div>
+    // ── Status dot color ─────────────────────────────────────────────────────
+    const statusColor = (status) => {
+        const map = {
+            'Order Placed'      : 'bg-blue-500',
+            'Packing'           : 'bg-yellow-500',
+            'Shipped'           : 'bg-purple-500',
+            'Out for delivery'  : 'bg-orange-500',
+            'Delivered'         : 'bg-green-500',
+        }
+        return map[status] || 'bg-gray-400'
+    }
 
-              {/* Product Details */}
-              <div className='flex flex-col lg:flex-row gap-6'>
-                {/* Product Image + Basic Info */}
-                <div className='flex items-start gap-4 flex-1'>
-                  <img 
-                    src={item.image?.[0] || '/placeholder.jpg'} 
-                    alt={item.name}
-                    className='w-20 h-20 object-cover rounded-lg flex-shrink-0'
-                  />
-                  <div className='flex-1 min-w-0'>
-                    <div className='flex items-center gap-2 text-sm mb-1'>
-                      <span className='bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs'>
-                        Size: {orderSize}
-                      </span>
-                      <span className='bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs'>
-                        Qty: {orderQuantity}
-                      </span>
-                    </div>
-                    <p className='font-semibold text-gray-900'>
-                      {currency} {(item.price * orderQuantity).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
+    const loadOrderData = async () => {
+        try {
+            if (!token) return
+            const response = await axios.post(
+                backendUrl + '/api/order/userorders',
+                {},
+                { headers: { token } }
+            )
+            if (response.data.success) {
+                let allOrdersItem = []
+                response.data.orders.map((order) => {
+                    order.items.map((item) => {
+                        item['status']        = order.status
+                        item['payment']       = order.payment
+                        item['paymentMethod'] = order.paymentMethod
+                        item['date']          = order.date
+                        allOrdersItem.push(item)
+                    })
+                })
+                setOrderData(allOrdersItem.reverse())
+            } else {
+                toast.error(response.data.message)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
 
-                {/* Order Total & Actions */}
-                <div className='flex flex-col items-end gap-2 text-sm'>
-                  <p className='font-semibold text-lg text-green-600'>
-                    {currency} {(item.price * orderQuantity).toFixed(2)}
-                  </p>
-                  <button className='text-blue-600 hover:text-blue-800 text-sm font-medium'>
-                    Track order →
-                  </button>
-                </div>
-              </div>
-            </div>  // ✅ Proper single closing
-          )  // ✅ Map return closing
-        })}  
-      </div>
-    </div>
-  )
+    useEffect(() => {
+        loadOrderData()
+    }, [token])
+
+    return (
+        <div className='border-t pt-16'>
+            <div className='text-2xl mb-4'>
+                <Title text1={'My'} text2={'Orders'} />
+            </div>
+            <div>
+                {orderData.length === 0
+                    ? <p className='text-center text-gray-400 py-10'>No orders found.</p>
+                    : orderData.map((item, index) => (
+                        <div
+                            key={index}
+                            className='py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'
+                        >
+                            {/* Left — Image + Info */}
+                            <div className='flex items-start gap-6 text-sm'>
+                                <img
+                                    src={item.image?.[0]}
+                                    alt={item.name}
+                                    className='w-16 sm:w-20'
+                                />
+                                <div>
+                                    <p className='sm:text-base font-medium'>{item.name}</p>
+                                    <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
+                                        <p>{currency}{item.price}</p>
+                                        <p>Quantity: {item.quantity}</p>
+                                        <p>Size: {item.size}</p>
+                                    </div>
+                                    <p className='mt-2'>
+                                        Date: <span className='text-gray-400'>{new Date(item.date).toDateString()}</span>
+                                    </p>
+                                    <p className='mt-2'>
+                                        Payment: <span className='text-gray-400'>{item.paymentMethod}</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Right — Status + Track */}
+                            <div className='md:w-1/2 flex justify-between'>
+                                <div className='flex items-center gap-2'>
+                                    <p className={`min-w-2 h-2 rounded-full ${statusColor(item.status)}`}></p>  {/* ← dynamic color */}
+                                    <p className='text-sm md:text-base'>{item.status}</p>
+                                </div>
+                                <button
+                                    onClick={loadOrderData}
+                                    className='border px-4 py-2 text-sm font-medium rounded-sm'
+                                >
+                                    Track Order
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    )
 }
 
 export default Orders

@@ -25,6 +25,20 @@ const loginUser = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+
+
+// userController.js
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.body.userId).select('-password')
+    res.json({ success: true, user })
+  } catch (error) {
+    res.json({ success: false, message: error.message })
+  }
+}
+
+
+
 // Route for user register
 const registerUser = async (req, res) => {
     try {
@@ -98,4 +112,4 @@ const createAdmin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin,createAdmin };
+export { loginUser, registerUser, adminLogin,createAdmin,getUserProfile };

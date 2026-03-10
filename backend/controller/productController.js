@@ -1,7 +1,7 @@
 import {v2 as cloudinary} from "cloudinary";
 import Product from "../models/productModel.js";  // ✅ Fixed: Added .js
 import multer from "multer";
-import userModel from "../models/usermodel.js";
+import userModel from "../models/userModel.js";
 
 console.log('🔍 DEBUG - Product import:', Product ? '✅ LOADED' : '❌ FAILED');
 

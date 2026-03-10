@@ -4,7 +4,6 @@ import cors from 'cors'
 import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import userRouter from './routes/userRoute.js'
-import userModel from './models/userModel.js'
 import productRouter from './routes/productRoute.js'
 import cartRoute from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
@@ -28,6 +27,7 @@ app.use('/api/cart',    cartRoute)
 app.use('/api/order',   orderRouter)
 
 app.get('/', (req, res) => res.send('API working'))
-export default app 
+
 
 app.listen(port, () => console.log('server is working on port: ' + port))
+export default app 

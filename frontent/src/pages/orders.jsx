@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'        // ← capital S and C
-import Title from '../components/Title'                    // ← capital T
+import Title from '../components/title'                    // ← capital T
 import axios from 'axios'
 import { toast } from 'react-toastify'
 

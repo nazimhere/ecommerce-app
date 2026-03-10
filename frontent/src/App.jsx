@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/home'
 import Collection from './pages/collection'
-import Profile from './pages/Profile'
+import Profile from './pages/profile'
 import About from './pages/about'
 import Contact from './pages/contact'
 import Product from './pages/product'
@@ -13,7 +13,7 @@ import Orders from './pages/orders'
 import Navbar from './components/navbar'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
-import Verify from './pages/Verify'
+import Verify from './pages/verify'
  import { ToastContainer, toast } from 'react-toastify';
 
 const App = () => {

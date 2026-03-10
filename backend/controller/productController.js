@@ -13,7 +13,7 @@ export const addProduct = async (req, res) => {
         const imageFiles = req.files ? Object.values(req.files).flat() : []
         const images = await Promise.all(
             imageFiles.map(async (file) => {
-                const result = await cloudinary.uploader.upload(`data:${file.mimetype};base64,${file.buffer.toString("base64")}`, {
+               const result = await cloudinary.uploader.upload(`data:${file.mimetype};base64,${file.buffer.toString("base64")}`, {
     resource_type: 'image'
 })
                 return result.secure_url  // ✅ stores https://res.cloudinary.com/... URL

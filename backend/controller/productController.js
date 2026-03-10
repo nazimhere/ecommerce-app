@@ -1,7 +1,6 @@
 import {v2 as cloudinary} from "cloudinary";
 import Product from "../models/productModel.js";  // ✅ Fixed: Added .js
-import multer from "multer";
-import userModel from "../models/userModel.js";
+
 
 console.log('🔍 DEBUG - Product import:', Product ? '✅ LOADED' : '❌ FAILED');
 
@@ -14,9 +13,9 @@ export const addProduct = async (req, res) => {
         const imageFiles = req.files ? Object.values(req.files).flat() : []
         const images = await Promise.all(
             imageFiles.map(async (file) => {
-                const result = await cloudinary.uploader.upload(file.path, {
-                    resource_type: 'image'
-                })
+                const result = await cloudinary.uploader.upload(`data:${file.mimetype};base64,${file.buffer.toString("base64")}`, {
+    resource_type: 'image'
+})
                 return result.secure_url  // ✅ stores https://res.cloudinary.com/... URL
             })
         )

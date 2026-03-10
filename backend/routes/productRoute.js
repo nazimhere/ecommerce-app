@@ -5,14 +5,9 @@ import adminAuth from '../middleware/adminAuth.js'
 
 const productRouter = express.Router()
 
-const storage = multer.diskStorage({
-    destination: 'uploads/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
-const upload = multer({ storage })
+const storage = multer.memoryStorage()
 
+const upload = multer({ storage })
 productRouter.post('/add', adminAuth, upload.fields([
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },

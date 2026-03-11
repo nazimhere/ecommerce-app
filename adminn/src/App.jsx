@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import List from './pages/list';
 import Orders from './pages/order';
 import Add from './pages/add';
-import Login from './components/Login';
+import Login from './components/login';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
